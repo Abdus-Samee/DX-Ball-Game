@@ -1,0 +1,177 @@
+#include <math.h>
+#include <stdlib.h>
+#include <time.h>
+# include "iGraphics.h"
+# include "gl.h"
+
+int ball_x, ball_y;
+int lrx=210,urx=220,dy=35,dc,capture,dx1,c1,dx2,c2,dx3,c3,score;
+
+void target()
+{
+    dx1++,dx2+=2,dx3++;
+}
+
+
+void iDraw()
+{
+    iClear();
+
+    //lower platform of gun
+    iSetColor(255,0,0);
+    iFilledRectangle(lrx,0,30,10);
+
+    //upper platform of gun
+    iSetColor(0,0,255);
+    iFilledRectangle(urx,10,10,25);
+
+    //bullet
+    iSetColor(0+dc,0+dc,0+dc);
+    iFilledRectangle(capture+2.5,dy,5,5);
+
+
+    /*if(dy-(500-dx)>5)
+    {
+        iSetColor(0+dc,0+dc,0+dc);
+        iFilledRectangle(capture+2.5,dy,5,5);
+    }*/
+
+    //three consecutive if's to check that targets don't cross boundary
+    if(c1>=495) c1=495;
+    if(c2>=495) c2=495;
+    if(c3>=495) c3=495;
+
+
+    //three consecutive if's to update score and redeclare target variables upon collision
+    if(abs((capture+2.5)-c1)<=5 && (500-dx1)-dy<=5)
+    {
+        c1=rand()%500,dx1=0,score+=1;
+    }
+    if(abs((capture+2.5)-c2)<=5 && (500-dx2)-dy<=5)
+    {
+        c2=rand()%500,dx2=0,score+=1;
+    }
+    if(abs((capture+2.5)-c3)<=5 && (500-dx3)-dy<=5)
+    {
+        c3=rand()%500,dx3=0,score+=1;
+    }
+
+
+    //three consecutive if's to exit out of game when target hits gun limit and show score
+    if((500-dx1)==35)
+    {
+        printf("Your score is %d",score);
+        exit(0);
+    }
+    if((500-dx2)<=35)
+    {
+        printf("Your score is %d",score);
+        exit(0);
+    }
+    if((500-dx3)==35)
+    {
+        printf("Your score is %d",score);
+        exit(0);
+    }
+
+
+    //first target
+    srand(time(0));
+    c1=rand()%500;
+    iSetColor(0,255,255);
+    iFilledRectangle(c1,500-dx1,5,5);
+
+    //second target
+    srand(time(0));
+    c2=rand()%250;
+    iSetColor(0,255,255);
+    iFilledRectangle(c2,500-dx2,5,5);
+
+    //third target
+    srand(time(0));
+    c3=rand()%300;
+    iSetColor(0,255,255);
+    iFilledRectangle(c3,500-dx3,5,5);
+}
+
+
+
+void bullet()
+{
+    dy++;
+}
+
+void iMouseMove(int mx, int my)
+{
+
+}
+
+void iMouse(int button, int state, int mx, int my)
+{
+    if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+
+    }
+    if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+    {
+
+    }
+}
+
+void iKeyboard(unsigned char key)
+{
+    if(key == 'p')
+    {
+        iPauseTimer(0);
+    }
+    if(key == 'r')
+    {
+        iResumeTimer(0);
+    }
+    if(key== ' ')
+    {
+        capture=urx,dy=35,dc=255;
+        //iSetTimer(15,bullet);
+    }
+}
+
+void iSpecialKeyboard(unsigned char key)
+{
+
+    if(key == GLUT_KEY_END)
+    {
+        exit(0);
+    }
+
+    if(key==GLUT_KEY_RIGHT)
+    {
+        if(lrx<=470){
+            lrx+=3,urx+=3;
+        }
+    }
+
+    if(key==GLUT_KEY_LEFT)
+    {
+        if(lrx>=0){
+            lrx-=3,urx-=3;
+        }
+    }
+}
+
+
+
+int main()
+{
+//    PlaySound((LPCSTR) "C:\\Users\\Public\\Music\\Sample Music\\Sleep Away.mp3", NULL, SND_FILENAME | SND_ASYNC);
+
+    iSetTimer(1,target);
+    iSetTimer(15,bullet);
+    score=0;
+    iInitialize(500, 500,"Shooting Game");
+
+
+
+    return 0;
+}
+
+
