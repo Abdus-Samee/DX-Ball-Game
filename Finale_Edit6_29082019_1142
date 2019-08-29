@@ -1,0 +1,217 @@
+/*
+	author: S. M. Shahriar Nirjon
+	last modified: August 8, 2008
+*/
+# include "iGraphics.h"
+# include "gl.h"
+
+int ball_x, ball_y;
+int dx=5, dy=7;
+int arr1[4][4],arr2[4][4],arr3[4][4],arr4[4][4],arr5[5][5];
+int posx,posy,cap,rad,isballstarted;
+/*
+	function iDraw() is called again and again by the system.
+*/
+void iDraw()
+{
+    //place your drawing codes her
+
+    iClear();
+
+    iSetColor(255,255,255);
+    iFilledCircle(ball_x,ball_y,rad);
+    posy=800;
+    for(int i=0;i<4;i++)
+    {
+        posx=0;
+        for(int j=0;j<4;j++){
+            if(arr1[i][j]==0){
+                iSetColor(255,0,0);
+                iFilledRectangle(posx,posy,40,40);
+            }
+            posx+=40;
+        }
+        posy-=40;
+      }
+
+
+    for(int i=0;i<4;i++)
+    {
+        cap=posx;
+        for(int j=0;j<4;j++){
+            if(arr2[i][j]==0){
+                iSetColor(0,255,0);
+                iFilledRectangle(cap,posy,40,40);
+            }
+            cap+=40;
+        }
+        posy-=40;
+    }
+
+    for(int i=0;i<4;i++)
+    {
+        posx=cap;
+        for(int j=0;j<4;j++){
+            if(arr3[i][j]==0){
+                iSetColor(150,150,150);
+                iFilledRectangle(posx,posy,40,40);
+            }
+            posx+=40;
+        }
+        posy-=40;
+    }
+
+    posy+=200;
+    for(int i=0;i<4;i++)
+    {
+        cap=posx;
+        for(int j=0;j<4;j++){
+            if(arr4[i][j]==0){
+                iSetColor(0,0,255);
+                iFilledRectangle(cap,posy,40,40);
+            }
+            cap+=40;
+        }
+        posy+=40;
+    }
+
+    posy+=120;
+    for(int i=0;i<4;i++)
+    {
+        posx=cap;
+        for(int j=0;j<4;j++){
+            if(arr5[i][j]==0){
+                iSetColor(0,255,255);
+                iFilledRectangle(posx,posy,40,40);
+            }
+            posx+=40;
+        }
+        posy-=40;
+      }
+    }
+
+void collision()
+{
+    if(isballstarted){
+    ball_x+=dx;
+    ball_y+=dy;
+
+    if(ball_x+rad>800 || ball_x+rad<0) dx=-dx;
+    if(ball_y+rad<0) dy=-dy;
+    if(ball_y+rad>=320)
+    {
+        if(ball_x>0 && ball_x<=160 && ball_y+rad>=640)
+        {
+            if(arr1[ball_x/40][640-(ball_y+rad)]==0)
+            {
+                arr1[ball_x/40][640-(ball_y+rad)]=1;
+                dx=-dx;
+                dy=-dy;
+            }
+        }
+
+        if(ball_x>160 && ball_x<=320 && ball_y+rad>=480)
+        {
+            if(arr2[ball_x/40][480-(ball_y+rad)]==0)
+            {
+                arr2[ball_x/40][480-(ball_y+rad)]=1;
+                dx=-dx;
+                dy=-dy;
+            }
+        }
+
+        if(ball_x>320 && ball_x<=480 && ball_y+rad>=320)
+        {
+            if(arr3[ball_x/40][320-(ball_y+rad)]==0)
+            {
+                arr3[ball_x/40][320-(ball_y+rad)]=1;
+                dx=-dx;
+                dy=-dy;
+            }
+        }
+
+        if(ball_x>480 && ball_x<=640 && ball_y+rad>=480)
+        {
+            if(arr4[ball_x/40][480-(ball_y+rad)]==0)
+            {
+                arr4[ball_x/40][480-(ball_y+rad)]=1;
+                dx=-dx;
+                dy=-dy;
+            }
+        }
+
+        if(ball_x>64 && ball_x<=800 && ball_y+rad>=640)
+        {
+            if(arr5[ball_x/40][640-(ball_y+rad)]==0)
+            {
+                arr5[ball_x/40][640-(ball_y+rad)]=1;
+                dx=-dx;
+                dy=-dy;
+            }
+        }
+
+    }
+    }
+}
+
+
+void iMouseMove(int mx, int my)
+{
+    //place your codes here
+}
+
+void iMouse(int button, int state, int mx, int my)
+{
+    if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+        //place your codes here
+    }
+    if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+    {
+        //place your codes here
+    }
+}
+
+
+void iKeyboard(unsigned char key)
+{
+    if(key == 'p')
+    {
+        //do something with 'q'
+        iPauseTimer(0);
+    }
+    if(key == 'r')
+    {
+        iResumeTimer(0);
+    }
+    if(key == 'o')
+    {
+        isballstarted=1;
+    }
+}
+
+void iSpecialKeyboard(unsigned char key)
+{
+
+    if(key == GLUT_KEY_END)
+    {
+        exit(0);
+    }
+}
+
+
+
+
+int main()
+{
+
+iSetTimer(20,collision);
+    ball_x=400;
+    ball_y=35;
+    rad=35;
+    iInitialize(800, 850, "Ball Demo");
+
+    return 0;
+}
+
+
